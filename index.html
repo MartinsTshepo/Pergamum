@@ -117,7 +117,8 @@ dialog .row{display:flex;gap:10px;margin-top:20px}.row .btn{flex:1}
 #cp input{width:100%;min-height:40px;border:0;border-radius:10px;background:var(--fill);color:var(--tx);font:16px var(--sans);padding:0 12px}#cp h4{margin:14px 4px 4px;font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
 .li{display:block;width:100%;text-align:left;border:0;background:none;color:var(--tx);font:15px/1.3 var(--sans);padding:10px 8px;border-radius:8px;cursor:pointer;min-height:44px}.li:hover,.li:focus-visible{background:var(--fill)}
 @media(prefers-reduced-motion:reduce){.bk{transition:none}}
-.hit{display:flex;gap:12px;align-items:center;background:var(--fill);border-radius:12px;padding:8px;margin:8px 0}.hit img{width:44px;aspect-ratio:.68;object-fit:cover;border-radius:3px;background:#0003;flex:none}.hit div{flex:1;min-width:0}.hit b{display:block;font-size:15px;line-height:1.25}.hit small{color:var(--t2)}.hit .btn{min-height:40px;padding:0 12px;font-size:14px;flex:none}
+.hit{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--fill);border-radius:12px;padding:8px;margin:8px 0}.hit img{width:44px;aspect-ratio:.68;object-fit:cover;border-radius:3px;background:#0003;flex:none}.hit>div:not(.why){flex:1;min-width:0}.hit b{display:block;font-size:15px;line-height:1.25;overflow-wrap:anywhere}.hit small{color:var(--t2);display:block;overflow-wrap:anywhere}.empty .btn{margin:5px 4px}.hit>.btn{min-height:40px;padding:0 12px;font-size:14px;flex:none}
+.why{flex-basis:100%}.why .row .btn{min-height:40px;font-size:14px}a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 </style>
 </head>
 <body>
@@ -284,8 +285,8 @@ async function flip(d){if(!R||pref.m||R.busy)return;const to=R.p+d;if(to<1||to>R
   await tp.animate(d>0?[{transform:'rotateY(0deg)'},{transform:`rotateY(${sg*180}deg)`}]:[{transform:`rotateY(${sg*180}deg)`},{transform:'rotateY(0deg)'}],{duration:ms,easing:ez,fill:'forwards'}).finished;
   R.p=to;setPg(R.f.id,to);upd();rc.replaceChildren(leaf(await pageEl(to)));keep(to)}
  finally{if(R)R.busy=0}}
-const chrome=()=>{clearTimeout(hideT);rd.classList.toggle('bare');rp.hidden=true;cp.hidden=true};
-rc.onclick=e=>{if(pref.m||!R)return;const x=e.clientX/innerWidth;if(x<.3)flip(pref.r?1:-1);else if(x>.7)flip(pref.r?-1:1);else chrome()};
+const toggleBars=()=>{clearTimeout(hideT);rd.classList.toggle('bare');rp.hidden=true;cp.hidden=true};
+rc.onclick=e=>{if(pref.m||!R)return;const x=e.clientX/innerWidth;if(x<.3)flip(pref.r?1:-1);else if(x>.7)flip(pref.r?-1:1);else toggleBars()};
 let tx0=0,ty0=0;rc.addEventListener('touchstart',e=>{tx0=e.changedTouches[0].clientX;ty0=e.changedTouches[0].clientY},{passive:true});
 rc.addEventListener('touchend',e=>{if(pref.m||!R)return;const dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.4)flip(dx<0?(pref.r?-1:1):(pref.r?1:-1))},{passive:true});
 rc.onscroll=()=>{if(!pref.m||!R||!rc.firstChild)return;R.p=Math.min(R.n,Math.max(1,Math.round(rc.scrollTop/(rc.firstChild.offsetHeight+10))+1));setPg(R.f.id,R.p);upd()};
@@ -352,30 +353,39 @@ $('#sync').onclick=syncNow;
 (async()=>{try{if(!window.claude)return say('Cloud sync isn’t part of the installed app. Use Back up and Restore to move books between devices.');const[db,us,as]=await Promise.all([claude.use('db'),claude.use('user'),claude.use('assets')]),uid=us&&await us.id();
  if(db&&uid){cloud={as,col:db.collection('data/users/'+uid)};say('Cloud sync is ready.'+(as?'':' This account can sync details but not PDF files.'));syncNow()}else say('Sign in to claude.ai to sync across devices.')}catch(e){say('Cloud sync isn’t available here.')}})();
 /* Internet Archive source */
-const IA='https://archive.org',bd=$('#bdlg'),one=v=>String([].concat(v||'')[0]||'');
+const IA='https://archive.org',bd=$('#bdlg'),one=v=>String([].concat(v||'')[0]||''),clip=(t,n)=>t.length>n?t.slice(0,n-1)+'…':t;
 function openBrowse(){dlg.close();bd.showModal();$('#bq').focus()}
 $('#ia1').onclick=$('#ia2').onclick=openBrowse;$('#bclose').onclick=()=>bd.close();
+const iaQuery=(q,strict)=>`(${q}) AND mediatype:texts AND -access-restricted-item:true`+(strict?' AND NOT collection:inlibrary AND NOT collection:printdisabled AND NOT collection:lendinglibrary AND (format:"Text PDF" OR format:"Image Container PDF")':'');
+async function iaSearch(q,strict){const r=await fetch(`${IA}/advancedsearch.php?q=${encodeURIComponent(iaQuery(q,strict))}&fl[]=identifier&fl[]=title&fl[]=creator&fl[]=year&rows=24&sort[]=downloads%20desc&output=json`);if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();if(!j.response)throw new Error('bad query');return j.response.docs}
 async function iaFind(){const q=$('#bq').value.trim(),res=$('#bres');if(!q)return;res.replaceChildren(h('p','note','Searching…'));
- try{const u=`${IA}/advancedsearch.php?q=${encodeURIComponent('('+q+') AND mediatype:texts AND -access-restricted-item:true')}&fl[]=identifier&fl[]=title&fl[]=creator&fl[]=year&rows=24&sort[]=downloads%20desc&output=json`;
-  const docs=(await(await fetch(u)).json()).response.docs;res.replaceChildren();
-  if(!docs.length)return res.append(h('p','note','Nothing found. Try other words.'));
-  docs.forEach(d=>{const row=h('div','hit'),im=new Image(),tx=h('div'),b=h('button','btn','Add');im.src=`${IA}/services/img/${d.identifier}`;im.alt='';im.loading='lazy';
-   tx.append(h('b','',one(d.title)),h('small','',[one(d.creator),d.year].filter(Boolean).join(' · ')));
-   if(films.some(f=>f.id==='ia_'+d.identifier)){b.textContent='In library';b.disabled=true}else b.onclick=()=>iaAdd(d,b);
+ try{let docs;try{docs=await iaSearch(q,true)}catch(e){if(e instanceof TypeError)throw e;docs=await iaSearch(q,false)}
+  res.replaceChildren();
+  if(!docs.length){res.append(h('p','note','Nothing freely downloadable matched. Try other words, or look on archive.org directly.'));return}
+  docs.forEach(d=>{const row=h('div','hit'),im=new Image(),tx=h('div'),b=h('button','btn','Add');im.src=`${IA}/services/img/${d.identifier}`;im.alt='';im.loading='lazy';im.onerror=()=>{im.style.visibility='hidden'};
+   tx.append(h('b','',clip(one(d.title),90)),h('small','',clip([one(d.creator),d.year].filter(Boolean).join(' · '),80)));
+   if(films.some(f=>f.id==='ia_'+d.identifier)){b.textContent='In library';b.disabled=true}else b.onclick=()=>iaAdd(d,b,row);
    row.append(im,tx,b);res.append(row)})}
  catch(e){res.replaceChildren(h('p','note','Couldn’t reach the Internet Archive. Check your connection and try again.'))}}
 $('#bgo').onclick=iaFind;$('#bq').onkeydown=e=>{if(e.key==='Enter')iaFind()};
-async function iaAdd(d,b){b.disabled=true;const id=d.identifier;
- try{b.textContent='Finding…';const m=await(await fetch(`${IA}/metadata/${id}`)).json(),ps=(m.files||[]).filter(x=>/\.pdf$/i.test(x.name)),f=ps.find(x=>x.format==='Text PDF')||ps.find(x=>x.format==='Image Container PDF')||ps[0];
+const plain=m=>m?one(m.metadata&&m.metadata.description).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,600):'';
+async function iaAdd(d,b,row){b.disabled=true;const id=d.identifier;let m=null;const old=row.querySelector('.why');old&&old.remove();
+ try{b.textContent='Finding…';m=await(await fetch(`${IA}/metadata/${id}`)).json();const ps=(m.files||[]).filter(x=>/\.pdf$/i.test(x.name)),f=ps.find(x=>x.format==='Text PDF')||ps.find(x=>x.format==='Image Container PDF')||ps[0];
   if(!f){b.textContent='No PDF';return}
-  const res=await fetch(`${IA}/download/${id}/${encodeURIComponent(f.name)}`);if(!res.ok)throw 0;const tot=+f.size||+res.headers.get('content-length')||0,rd=res.body.getReader(),ch=[];let got=0;
+  const res=await fetch(`${IA}/download/${id}/${f.name.split('/').map(encodeURIComponent).join('/')}`);if(!res.ok){const er=new Error('HTTP '+res.status);er.status=res.status;throw er}
+  const tot=+f.size||+res.headers.get('content-length')||0,rd=res.body.getReader(),ch=[];let got=0;
   for(;;){const{done,value}=await rd.read();if(done)break;ch.push(value);got+=value.length;b.textContent=tot?Math.round(got/tot*100)+'%':Math.round(got/1048576)+' MB'}
   const pdf=new Blob(ch,{type:'application/pdf'});let cb=null;try{const c=await(await fetch(`${IA}/services/img/${id}`)).blob();if(/^image\//.test(c.type))cb=c}catch(e){}
-  b.textContent='Shelving…';const info=await pdfInfo(pdf,!cb),ds=one(m.metadata&&m.metadata.description).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,600);
-  await SOURCES[0].save({id:'ia_'+id,t:one(d.title),a:one(d.creator),y:String(d.year||'—'),s:ds,np:info.np,pdf,cb:cb||info.cb||null,src:'local'});await load();b.textContent='Added'}
- catch(e){b.disabled=false;b.textContent='Retry'}}
+  b.textContent='Shelving…';const info=await pdfInfo(pdf,!cb);
+  await SOURCES[0].save({id:'ia_'+id,t:one(d.title),a:one(d.creator),y:String(d.year||'—'),s:plain(m),np:info.np,pdf,cb:cb||info.cb||null,src:'local'});await load();b.textContent='Added'}
+ catch(e){b.disabled=false;b.textContent='Retry';
+  const why=e instanceof TypeError?'The browser blocked this download, so the Archive didn’t allow it from this page.':(e.status===401||e.status===403)?'This book is borrow-only, so it can’t be downloaded.':e.status?'The Archive answered '+e.status+'.':'The file couldn’t be read as a PDF.';
+  const box=h('div','why');box.append(h('p','note',why+' You can save the PDF yourself and add it here.'));
+  const a=h('a','btn','Open on archive.org');a.href=`${IA}/details/${id}`;a.target='_blank';a.rel='noopener';
+  const u=h('button','btn','I have the PDF');u.onclick=()=>{bd.close();openForm(null);$('#ft').value=one(d.title);$('#fa').value=clip(one(d.creator),60);$('#fy').value=String(d.year||'').slice(0,4);$('#fs').value=plain(m)};
+  const r=h('div','row');r.style.marginTop='6px';r.append(a,u);box.append(r);row.append(box)}}
 navigator.storage&&navigator.storage.persist&&navigator.storage.persist();
-if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).catch(()=>{}));
 rebuild();load();
 </script>
 <script src="pdf.min.js" onload="if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='pdf.worker.min.js'"></script>
