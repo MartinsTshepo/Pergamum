@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Pergamum</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<script>try{var t=localStorage.th;if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{--bg:#f2f2f7;--sf:#fff;--tx:#1c1c1e;--t2:#6c6c70;--ln:#3c3c4333;--ac:#007aff;--gl:rgba(249,249,251,.78);--fill:rgba(120,120,128,.16);--p1:#d9d3c7;--p2:#bdb5a6;--stain:#0b0b0d;--sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",system-ui,sans-serif;--serif:ui-serif,"New York",Georgia,serif;color-scheme:light;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--sf:#1c1c1e;--tx:#f5f5f7;--t2:#98989f;--ln:#54545899;--ac:#0a84ff;--gl:rgba(28,28,30,.76);--p1:#3b3834;--p2:#24211e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000;--sf:#1c1c1e;--tx:#f5f5f7;--t2:#98989f;--ln:#54545899;--ac:#0a84ff;--gl:rgba(28,28,30,.76);--p1:#3b3834;--p2:#24211e;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.4 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;overscroll-behavior-y:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+button{font:inherit}
+.btn{min-height:44px;padding:0 18px;border:0;border-radius:12px;background:var(--fill);color:var(--ac);font-weight:600;cursor:pointer;touch-action:manipulation;transition:transform .15s,filter .15s}
+.btn:active{transform:scale(.96)}.btn:hover{filter:brightness(.95)}
+.btn.pri{background:var(--ac);color:#fff}.btn.big{width:100%;min-height:52px;font-size:18px;border-radius:14px}.btn.del{color:#ff453a}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:flex-end;gap:10px;padding:14px 16px 10px;background:var(--gl);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border-bottom:.5px solid var(--ln)}
+header div{flex:1}header h1{margin:0;font-size:32px;line-height:1.05;letter-spacing:-.02em;font-weight:700}header small{color:var(--t2);font-size:13px}
+.plus{width:44px;padding:0;font-size:26px;line-height:1;border-radius:22px}
+.empty{margin:28px 16px 6px;padding:26px 22px;background:var(--sf);border-radius:20px;text-align:center;box-shadow:0 1px 0 var(--ln)}
+.empty h2{margin:0 0 6px;font-size:22px}.empty p{margin:0 0 18px;color:var(--t2)}.empty .btn{width:auto}
+.unit{margin:0 0 4px;padding:0 14px}
+.tapes{display:flex;gap:1px;align-items:flex-end;padding-top:24px;min-height:206px}
+.plank{height:14px;margin:0 -14px;background:linear-gradient(var(--p1),var(--p2));box-shadow:0 8px 14px #0003,inset 0 1px 0 #fff4}
+.bk{position:relative;flex:none;background:linear-gradient(90deg,#0007,#0000 18%,#fff2 40%,#0000 62%,#0008),linear-gradient(var(--c1),var(--c2));border-radius:3px 3px 1px 1px;cursor:pointer;transform:rotate(var(--r));transform-origin:50% 100%;transition:transform .25s cubic-bezier(.2,.9,.3,1);overflow:hidden;box-shadow:1px 0 3px #0008}
+.bk:hover,.bk:active{transform:rotate(var(--r)) translateY(-8px)}
+.bk::before{content:'';position:absolute;inset:0;background:linear-gradient(#e8d29a,#e8d29a) 0 10px/100% 2px,linear-gradient(#e8d29a,#e8d29a) 0 15px/100% 1px,linear-gradient(#e8d29a,#e8d29a) 0 calc(100% - 12px)/100% 2px;background-repeat:no-repeat;opacity:.9}
+.lab{position:absolute;left:3px;right:3px;top:24px;bottom:22px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font:600 14px/1 var(--serif);letter-spacing:.02em;color:#f4e3b6;text-shadow:0 1px 2px #000b;overflow:hidden;white-space:nowrap}
+.bk::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:var(--w);background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='180'><filter id='n'><feTurbulence baseFrequency='.8' numOctaves='2'/><feColorMatrix values='0 0 0 0 .05 0 0 0 0 .03 0 0 0 0 .02 0 0 0 1.6 -.5'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+#stage{position:fixed;inset:0;z-index:20;background:#000a;opacity:0;transition:opacity .5s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#stage.on{opacity:1}
+.box{position:fixed;transform-style:preserve-3d;cursor:pointer}
+.f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#101013;overflow:hidden}
+.front{transform:translateZ(var(--d));border-radius:1px 4px 4px 1px}
+.front::before{content:'';position:absolute;left:0;top:0;bottom:0;width:7%;background:linear-gradient(90deg,#0008,#0000);z-index:2}
+.front::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#fff3 0 22%,#0000 40%,#0003);pointer-events:none}
+.back{transform:rotateY(180deg) translateZ(var(--d));background:linear-gradient(var(--c1),var(--c2))}
+.sp,.rt{inset:auto;top:0;bottom:0}
+.sp{transform:rotateY(-90deg) translateZ(var(--hw))}
+.sp .bk{width:100%!important;height:100%!important;transform:none!important;box-shadow:none}
+.rt{transform:rotateY(90deg) translateZ(var(--hw));background:repeating-linear-gradient(0deg,#ece3cc 0 2px,#cfc2a1 2px 3px)}
+.cap{position:fixed;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom,0px));text-align:center;color:#fffd;font-size:15px;opacity:0;transition:opacity .5s .9s;padding:0 16px}
+#stage.on .cap{opacity:1}
+#stage.open .box,#stage.open .cap{opacity:0;transition:opacity .7s .3s}
+.cov{width:100%;height:100%;container-type:inline-size;position:relative;display:flex;flex-direction:column;padding:10cqw 9cqw 11cqw 13cqw;overflow:hidden;color:#fff}
+.cov img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cov b{font:700 15cqw/1.04 var(--serif);text-shadow:0 2px 10px #0006;word-break:break-word;position:relative;margin-top:auto;letter-spacing:-.01em}
+.cov small{font:600 6.4cqw/1.2 var(--sans);opacity:.9;position:relative;letter-spacing:.12em;text-transform:uppercase}
+#ink{position:fixed;inset:0;z-index:40}
+#ink[hidden],#rd[hidden],#rp[hidden]{display:none}
+.stain{position:absolute;inset:0;background:var(--stain)}
+.sheet{position:absolute;inset:0;background:var(--bg);overflow:auto;overscroll-behavior:contain}
+.sh{display:grid;grid-template-columns:minmax(200px,320px) minmax(0,1fr);gap:clamp(20px,4vw,56px);max-width:960px;margin:0 auto;padding:calc(70px + env(safe-area-inset-top,0px)) clamp(18px,4vw,40px) calc(60px + env(safe-area-inset-bottom,0px))}
+@media(max-width:720px){.sh{grid-template-columns:1fr}.cvw{width:min(62vw,260px);margin:0 auto}.txt{text-align:left}}
+.cvw{aspect-ratio:.68;border-radius:6px 12px 12px 6px;overflow:hidden;box-shadow:0 18px 40px #0005,0 2px 6px #0003;align-self:start;position:sticky;top:70px;background:#111}
+.meta{margin:0 0 4px;font-size:14px;color:var(--t2);font-weight:500}
+.sh h2{font:700 clamp(32px,7vw,56px)/1.05 var(--serif);margin:0 0 16px;letter-spacing:-.02em}
+.syn{font:17px/1.55 var(--serif);max-width:60ch;margin:0 0 20px}
+.pb{height:5px;background:var(--fill);border-radius:3px;margin:0 0 10px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ac);border-radius:3px}
+.acts{display:flex;flex-direction:column;gap:10px;margin-top:14px;max-width:420px}
+.acts .row2{display:flex;gap:10px}.row2 .btn{flex:1}
+.x{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:14px;z-index:2;background:var(--gl);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+#rd{--pp:#fff;--pt:#6c6c70;position:fixed;inset:0;z-index:60;background:var(--pp);overscroll-behavior:contain;user-select:none;-webkit-user-select:none}
+#rd.night{--pp:#141414;--pt:#8e8e93}
+#rc{position:absolute;inset:0}
+#rc.pg{perspective:2600px;overflow:hidden;cursor:pointer;touch-action:manipulation}
+#rc.sc{overflow:auto;padding:76px 0 90px}
+.lf{position:absolute;inset:0;transform-style:preserve-3d}
+.under{z-index:1}.shd{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none}.top{z-index:3}
+.fc,.bc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--pp);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bc{transform:rotateY(180deg);background:linear-gradient(90deg,var(--pp),#0003)}
+.fc::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to right,#0002,#0000 5%)}
+.rtl .fc::before{background:linear-gradient(to left,#0002,#0000 5%)}
+.sd{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:2}
+#rd.night canvas{filter:invert(.92) hue-rotate(180deg)}
+.ph{width:min(100%,720px);margin:0 auto 10px;background:var(--pp)}.ph canvas{display:block;width:100%;height:100%}
+.msg{padding:30px;text-align:center;position:absolute;inset:0;display:grid;place-items:center;color:var(--pt)}
+.rb,.rsl{position:absolute;left:10px;right:10px;z-index:5;display:flex;align-items:center;gap:10px;padding:6px;border-radius:18px;background:var(--gl);color:var(--tx);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);box-shadow:0 4px 24px #0003;transition:opacity .35s,transform .35s}
+.rb{top:calc(10px + env(safe-area-inset-top,0px))}.rsl{bottom:calc(10px + env(safe-area-inset-bottom,0px));padding:8px 16px}
+.rb span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:center;font-weight:600}
+.rsl input{flex:1;accent-color:var(--ac);height:28px}.rsl b{font-size:13px;color:var(--t2);font-weight:500;min-width:74px;text-align:right}
+#rd.bare .rb{opacity:0;transform:translateY(-14px);pointer-events:none}#rd.bare .rsl{opacity:0;transform:translateY(14px);pointer-events:none}
+#pn{position:absolute;left:0;right:0;bottom:calc(8px + env(safe-area-inset-bottom,0px));text-align:center;font-size:11px;color:var(--pt);pointer-events:none;opacity:0;transition:opacity .35s;z-index:4}
+#rd.bare #pn{opacity:.9}
+#rp{position:absolute;z-index:6;right:10px;top:calc(68px + env(safe-area-inset-top,0px));width:min(320px,calc(100% - 20px));padding:12px;border-radius:18px;background:var(--gl);color:var(--tx);backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px);box-shadow:0 10px 40px #0004}
+.seg{display:flex;background:var(--fill);border-radius:10px;padding:2px;margin:6px 0}
+.seg button{flex:1;min-height:38px;border:0;border-radius:8px;background:none;color:var(--tx);font-size:14px;font-weight:500;cursor:pointer}
+.seg .on{background:var(--sf);box-shadow:0 1px 4px #0003;font-weight:600}
+dialog{background:var(--sf);color:var(--tx);border:0;border-radius:22px;max-width:480px;width:calc(100% - 24px);max-height:92dvh;overflow:auto;padding:20px;box-shadow:0 20px 60px #0006;font-family:var(--sans)}
+dialog[open]{animation:up .4s cubic-bezier(.2,.9,.3,1)}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media(max-width:600px){dialog{margin:auto auto calc(8px + env(safe-area-inset-bottom,0px))}}
+dialog::backdrop{background:#0007;backdrop-filter:blur(4px)}
+dialog h3{margin:0 0 6px;font-size:24px;letter-spacing:-.01em}
+dialog label{display:block;margin:14px 0 6px;font-size:13px;color:var(--t2);font-weight:500}
+dialog input,dialog textarea{width:100%;font:16px var(--sans);padding:12px;border:0;border-radius:10px;background:var(--fill);color:var(--tx)}
+dialog input[type=file]{padding:10px}
+dialog .row{display:flex;gap:10px;margin-top:20px}.row .btn{flex:1}
+.src{background:var(--fill);border-radius:12px;padding:10px 14px;margin:8px 0}.src p{margin:2px 0}.note{font-size:13px;color:var(--t2);margin:0 0 6px}
+.unit{content-visibility:auto;contain-intrinsic-size:auto 244px}.bk:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.tools[hidden],.chips[hidden],.cont[hidden],#cp[hidden]{display:none}
+.tools{display:flex;gap:8px;padding:10px 16px 0}.tools input,.tools select{min-height:40px;border:0;border-radius:10px;background:var(--fill);color:var(--tx);font:16px var(--sans);padding:0 12px}.tools input{flex:1;min-width:0}
+.chips{margin:8px 16px 0}
+.cont{display:flex;gap:14px;align-items:center;margin:14px 16px 0;padding:12px;background:var(--sf);border-radius:18px;cursor:pointer;box-shadow:0 1px 0 var(--ln);border:0;width:calc(100% - 32px);text-align:left;color:var(--tx);font:inherit}
+.cont .cvt{width:48px;aspect-ratio:.68;border-radius:3px 6px 6px 3px;overflow:hidden;flex:none}.cont b{display:block}.cont small{color:var(--t2)}
+#cp{position:absolute;z-index:6;right:10px;top:calc(68px + env(safe-area-inset-top,0px));width:min(360px,calc(100% - 20px));max-height:60dvh;overflow:auto;padding:12px;border-radius:18px;background:var(--gl);color:var(--tx);backdrop-filter:saturate(180%) blur(24px);-webkit-backdrop-filter:saturate(180%) blur(24px);box-shadow:0 10px 40px #0004}
+#cp input{width:100%;min-height:40px;border:0;border-radius:10px;background:var(--fill);color:var(--tx);font:16px var(--sans);padding:0 12px}#cp h4{margin:14px 4px 4px;font-size:12px;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+.li{display:block;width:100%;text-align:left;border:0;background:none;color:var(--tx);font:15px/1.3 var(--sans);padding:10px 8px;border-radius:8px;cursor:pointer;min-height:44px}.li:hover,.li:focus-visible{background:var(--fill)}
+@media(prefers-reduced-motion:reduce){.bk{transition:none}}
+.hit{display:flex;gap:12px;align-items:center;background:var(--fill);border-radius:12px;padding:8px;margin:8px 0}.hit img{width:44px;aspect-ratio:.68;object-fit:cover;border-radius:3px;background:#0003;flex:none}.hit div{flex:1;min-width:0}.hit b{display:block;font-size:15px;line-height:1.25}.hit small{color:var(--t2)}.hit .btn{min-height:40px;padding:0 12px;font-size:14px;flex:none}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Pergamum</h1><small id="cnt"></small></div>
+  <button class="btn" id="set">Settings</button>
+  <button class="btn pri plus" id="add" aria-label="Add a book">+</button>
+</header>
+<div class="tools"><input id="q" type="search" placeholder="Search your library" aria-label="Search your library"><select id="so" aria-label="Sort by"><option value="r">Recent</option><option value="t">Title</option><option value="a">Author</option></select></div>
+<div class="seg chips" id="fl" role="group" aria-label="Filter"></div>
+<button class="cont" id="cont" hidden></button>
+<section class="empty" id="empty" hidden>
+  <h2>Your library is empty</h2>
+  <p>Shelve a PDF with a scanned cover. It stands here as a book you can pull out and read.</p>
+  <button class="btn pri" id="add2">Add your first book</button> <button class="btn" id="ia2">Find books online</button>
+</section>
+<main id="shelves"></main>
+<div id="stage" hidden></div>
+<div id="ink" hidden><div class="stain"></div><div class="sheet"></div></div>
+<div id="rd" hidden role="dialog" aria-modal="true" aria-label="Reader">
+  <div id="rc"></div>
+  <div class="rb"><button class="btn" id="rback">Done</button><span id="rt"></span><button class="btn" id="rbm" aria-label="Bookmark this page">☆</button><button class="btn" id="rtoc" aria-label="Search and contents">☰</button><button class="btn" id="raa" aria-label="Reading settings">Aa</button></div>
+  <div id="rp" hidden></div>
+  <div id="cp" hidden></div>
+  <div class="rsl"><input id="rs" type="range" min="1" value="1" aria-label="Page"><b id="rn"></b></div>
+  <div id="pn"></div>
+</div>
+<dialog id="dlg">
+  <h3 id="dt">Add a book</h3><p class="note" id="fn"></p><button class="btn" id="ia1" type="button" style="width:100%;margin:6px 0 2px">Find books on the Internet Archive</button>
+  <label for="ft">Title</label><input id="ft" maxlength="80" autocomplete="off">
+  <label for="fa">Author</label><input id="fa" maxlength="60" autocomplete="off">
+  <label for="fy">Year</label><input id="fy" maxlength="4" inputmode="numeric">
+  <label for="fs">Description</label><textarea id="fs" rows="3"></textarea>
+  <label for="fp">The book, as a PDF</label><input id="fp" type="file" accept="application/pdf">
+  <label for="fc">Cover scan or photo (left empty, page 1 of the PDF is the cover)</label><input id="fc" type="file" accept="image/*"><button class="btn" id="cam" type="button" style="margin-top:8px;width:100%">Scan cover with camera</button><input id="fcam" type="file" accept="image/*" capture="environment" hidden>
+  <div class="row"><button class="btn" id="cancel">Cancel</button><button class="btn pri" id="save">Shelve it</button></div>
+</dialog>
+<dialog id="sdlg">
+  <h3>Settings</h3>
+  <label>Appearance</label><div class="seg" id="ap"></div>
+  <label>Sources</label><div id="slist"></div>
+  <label>Backup</label><div class="row" style="margin-top:0"><button class="btn" id="bk1">Back up</button><button class="btn" id="bk2">Restore</button><input id="bkf" type="file" accept="application/json" hidden></div>
+  <div class="row" style="display:none"><button class="btn" id="sync">Sync now</button></div><p class="note" id="cs">Checking cloud sync…</p>
+  <p class="note">The Internet Archive is built in: choose Add a book, then Find books. More sources can plug in the same way.</p>
+  <div class="row"><button class="btn pri" id="sclose">Done</button></div>
+</dialog>
+<dialog id="bdlg"><h3>Internet Archive</h3><p class="note">Free, openly available texts. Borrow-only library books can’t be downloaded, so they are left out. If a download is blocked, save the PDF from archive.org and use Add a book instead.</p>
+  <div class="tools" style="padding:8px 0 0"><input id="bq" type="search" placeholder="Title, author or subject" aria-label="Search the Internet Archive"><button class="btn pri" id="bgo">Search</button></div><div id="bres"></div>
+  <div class="row"><button class="btn" id="bclose">Close</button></div></dialog>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="inkf" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="80" id="ds" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<script>
+const $=s=>document.querySelector(s),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='pdf.worker.min.js';
+const hash=s=>[...s].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+const M=['radial-gradient(circle at 68% 30%,#fff9 0 13%,transparent 14%)','repeating-linear-gradient(90deg,#0003 0 7px,transparent 7px 16px)','linear-gradient(transparent 60%,#0006 60%)'];
+const mk=f=>({...f,bg:`${M[f.m]},linear-gradient(160deg,${f.c1},${f.c2})`,bw:22+Math.min(26,Math.round((f.np||200)/14)),bh:158+hash(f.t)%34});
+const hyd=r=>{const x=hash(r.t),hu=x%360;return mk({...r,cu:r.cb?URL.createObjectURL(r.cb):null,c1:`hsl(${hu} 42% 34%)`,c2:`hsl(${(hu+30)%360} 48% 12%)`,m:x%3})};
+let films=[];
+
+/* storage: this browser only */
+const db=new Promise(r=>{try{const q=indexedDB.open('inkshelf',1);q.onupgradeneeded=()=>q.result.createObjectStore('f',{keyPath:'id'});q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
+const dbop=async(m,v)=>{const d=await db;if(!d)return[];try{return await new Promise(ok=>{const q=d.transaction('f',m==='getAll'?'readonly':'readwrite').objectStore('f')[m](v);q.onsuccess=()=>ok(q.result);q.onerror=()=>ok([])})}catch(e){return[]}};
+const getPg=id=>{try{return+localStorage['pg:'+id]||1}catch(e){return 1}},setPg=(id,n)=>{try{localStorage['pg:'+id]=n;localStorage['lr:'+id]=Date.now()}catch(e){}},getLr=id=>{try{return+localStorage['lr:'+id]||0}catch(e){return 0}},getBm=id=>{try{return JSON.parse(localStorage['bm:'+id]||'[]')}catch(e){return[]}},setBm=(id,a)=>{try{localStorage['bm:'+id]=JSON.stringify(a)}catch(e){}};
+
+/* sources, Mihon-style. A source is {id,name,note,load(),save(rec),drop(id)}.
+   An online source would add search(q)->[{t,a,y,s,coverUrl,pdfUrl}] and import its results into the Local shelf. */
+const SOURCES=[{id:'local',name:'Local shelf',note:'Books you add by hand: PDF, scanned cover, details. Saved in this browser.',load:()=>dbop('getAll'),save:r=>dbop('put',r),drop:id=>dbop('delete',id)}];
+const srcOf=f=>SOURCES.find(s=>s.id===(f.src||'local'))||SOURCES[0];let editing=null;
+async function load(){const all=(await Promise.all(SOURCES.map(s=>s.load().then(rs=>(rs||[]).map(r=>({...r,src:s.id})))))).flat();films=all.sort((a,b)=>b.id.localeCompare(a.id)).map(hyd);rebuild()}
+function openForm(f){editing=f;['fp','fc'].forEach(i=>$('#'+i).value='');$('#ft').value=f?f.t:'';$('#fa').value=f?f.a||'':'';$('#fy').value=f&&f.y!=='—'?f.y:'';$('#fs').value=f?f.s||'':'';
+ $('#dt').textContent=f?'Edit this book':'Add a book';$('#ia1').hidden=!!f;$('#fn').textContent=f?'Leave the PDF or cover empty to keep the current ones.':'';dlg.showModal()}
+const sd=$('#sdlg'),theme=v=>{document.documentElement.dataset.theme=v;try{localStorage.th=v}catch(e){}};
+function fillSet(){const a=$('#ap'),l=$('#slist'),cu=document.documentElement.dataset.theme||'';a.replaceChildren();l.replaceChildren();
+ [['','Auto'],['light','Light'],['dark','Dark']].forEach(([v,t])=>{const x=h('button',cu===v?'on':'',t);x.onclick=()=>{theme(v);fillSet()};a.append(x)});
+ SOURCES.forEach(s=>{const d=h('div','src');d.append(h('strong','',s.name),h('p','note',`${s.note} ${films.filter(f=>(f.src||'local')===s.id).length} books.`));l.append(d)})}
+$('#set').onclick=()=>{fillSet();sd.showModal()};$('#sclose').onclick=()=>sd.close();
+
+/* shelves: your books stand in rows, extra planks stay empty */
+let shown=[],filt='';const stat=f=>{const p=getPg(f.id);return f.np&&p>=f.np?'done':p>1?'now':'new'};
+function rebuild(){const sh=$('#shelves'),cap=innerWidth-28,q=$('#q').value.trim().toLowerCase(),so=$('#so').value;sh.replaceChildren();
+ shown=films.filter(f=>(!q||(f.t+' '+(f.a||'')).toLowerCase().includes(q))&&(!filt||stat(f)===filt)).sort((a,b)=>so==='t'?a.t.localeCompare(b.t):so==='a'?(a.a||'').localeCompare(b.a||''):getLr(b.id)-getLr(a.id)||b.id.localeCompare(a.id));
+ let rows=[[]],w=0;
+ shown.forEach((f,i)=>{if(w+f.bw+1>cap&&rows[rows.length-1].length){rows.push([]);w=0}rows[rows.length-1].push(i);w+=f.bw+1});
+ const need=Math.max(rows.length+1,Math.ceil((innerHeight-120)/236),3);
+ for(let r=0;r<need;r++){const u=h('div','unit'),tp=h('div','tapes');
+  (rows[r]||[]).forEach(i=>{const f=shown[i],e=h('div','bk');e.dataset.i=i;e.tabIndex=0;e.setAttribute('role','button');e.setAttribute('aria-label',f.t+(f.a?', '+f.a:''));
+   e.style.cssText=`width:${f.bw}px;height:${f.bh}px;--r:${Math.random()<.2?(Math.random()*5-2.5).toFixed(1):0}deg;--w:${(.2+Math.random()*.5).toFixed(2)};--c1:${f.c1};--c2:${f.c2}`;
+   const l=h('span','lab',f.t);l.style.fontSize=Math.max(9,Math.min(15,100/(f.t.length*.52)))+'px';e.append(l);tp.append(e)});
+  u.append(tp,h('div','plank'));sh.append(u)}
+ $('#empty').hidden=films.length>0;$('.tools').hidden=$('#fl').hidden=!films.length;$('#cnt').textContent=films.length?(shown.length===films.length?films.length+(films.length>1?' books':' book'):shown.length+' of '+films.length):'Nothing on the shelf yet';
+ const c=films.filter(f=>f.pdf&&stat(f)==='now').sort((a,b)=>getLr(b.id)-getLr(a.id))[0],cb=$('#cont');cb.hidden=!c||!!q||!!filt;
+ if(c){cb.onclick=()=>openReader(c);const t=h('div','cvt');t.append(cover(c));const d=h('div');d.append(h('b','','Continue reading'),h('small','',c.t+', page '+getPg(c.id)+(c.np?' of '+c.np:'')));cb.replaceChildren(t,d)}}
+let lw=innerWidth,rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(R&&!pref.m){R.cache.clear();show(R.p)}if(innerWidth!==lw&&!cur){lw=innerWidth;rebuild()}},250)});
+
+function cover(f){const d=h('div','cov');if(f.cu){const i=new Image();i.src=f.cu;i.alt='';d.append(i)}else{d.style.background=f.bg;d.append(h('small','',f.a||' '),h('b','',f.t))}return d}
+
+/* click a spine: the book slides out and turns */
+const stage=$('#stage');let cur=null;
+function openTape(el){if(cur)return;const f=shown[+el.dataset.i],r=el.getBoundingClientRect(),H=r.height,D=r.width,W=Math.round(H*.68);
+ stage.hidden=false;stage.className='';requestAnimationFrame(()=>stage.classList.add('on'));
+ const t=h('div','box');t.style.cssText=`width:${W}px;height:${H}px;left:${r.left+D/2-W/2}px;top:${r.top}px;--d:${D/2}px;--hw:${W/2}px;--c1:${f.c1};--c2:${f.c2}`;
+ const fr=h('div','f front');fr.append(cover(f));const bk=h('div','f back'),sp=h('div','f sp'),rt=h('div','f rt');
+ sp.style.cssText=rt.style.cssText=`width:${D}px;left:${(W-D)/2}px`;sp.append(el.cloneNode(true));t.append(fr,bk,sp,rt);
+ stage.replaceChildren(t,h('div','cap','Tap the book to open it'));
+ el.style.visibility='hidden';
+ const cx=innerWidth/2-(r.left+D/2),cy=innerHeight/2-(r.top+H/2)-14,s=Math.min(innerHeight*.6/H,innerWidth*.78/W),P='perspective(1100px) ';
+ const a=t.animate([{transform:P+'translate3d(0,0,0) scale(1) rotateY(90deg)',offset:0,easing:'cubic-bezier(.3,0,.2,1)'},
+  {transform:P+'translate3d(0,0,70px) scale(1.12) rotateY(90deg)',offset:.3,easing:'ease-in-out'},
+  {transform:P+`translate3d(${cx}px,${cy}px,0) scale(${s}) rotateY(-14deg)`,offset:1}],{duration:RM?1:1300,fill:'forwards'});
+ cur={el,t,a,f};
+ t.onclick=e=>{e.stopPropagation();openPage(f,t)};stage.onclick=e=>{if(e.target===stage)closeTape()}}
+function closeTape(){if(!cur||cur.busy)return;const c=cur;c.busy=1;stage.classList.remove('on');c.a.reverse();
+ c.a.onfinish=()=>{c.el.style.visibility='';stage.hidden=true;stage.replaceChildren();cur=null;rebuild()}}
+$('#shelves').addEventListener('click',e=>{const t=e.target.closest('.bk');if(t)openTape(t)});
+
+/* open: the cover spreads into the book's page like ink */
+const ink=$('#ink'),sheet=ink.querySelector('.sheet'),stain=ink.querySelector('.stain'),ds=$('#ds');let inkOpen=false,cx0=0,cy0=0,upGo=null;
+function inkTo(p0,p1,ms,done){const x=cx0,y=cy0,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y))*1.1,t0=performance.now();
+ ink.hidden=false;stain.hidden=false;ink.style.filter='url(#inkf)';
+ (function fr(now){const p=Math.min(1,(now-t0)/ms),q=p0+(p1-p0)*p,e=1-(1-q)**3,r=R*e;
+  sheet.style.clipPath=`circle(${r}px at ${x}px ${y}px)`;stain.style.clipPath=`circle(${r+34*(1-q)+10}px at ${x}px ${y}px)`;
+  ds.setAttribute('scale',90*(1-q*.7));
+  if(p<1)requestAnimationFrame(fr);else{if(p1===1){ink.style.filter='none';stain.hidden=true;sheet.style.clipPath='none'}else ink.hidden=true;done&&done()}})(t0)}
+function openPage(f,t){if(inkOpen)return;inkOpen=true;const b=t.querySelector('.front').getBoundingClientRect();cx0=b.left+b.width/2;cy0=b.top+b.height/2;
+ sheet.replaceChildren();const w=h('article','sh'),cw=h('div','cvw');cw.append(cover(f));const tx=h('div','txt');
+ const x=h('button','btn x','Done');x.onclick=()=>closePage();
+ tx.append(h('p','meta',[f.a,f.y!=='—'&&f.y,f.np&&f.np+' pages'].filter(Boolean).join(' · ')),h('h2','',f.t),h('p','syn',f.s||'No description yet. Use Edit to add one.'));
+ const pb=h('div','pb'),bar=h('i');pb.append(bar);tx.append(pb);
+ const ac=h('div','acts'),go=h('button','btn pri big');go.onclick=()=>f.pdf?openReader(f):openForm(f);
+ upGo=()=>{const p=getPg(f.id);pb.hidden=!(f.pdf&&p>1);bar.style.width=(f.np?p/f.np*100:0)+'%';go.textContent=f.pdf?(p>1?`Continue reading, page ${p}`:'Start reading'):'Add the PDF to read'};upGo();
+ const r2=h('div','row2'),ed=h('button','btn','Edit');ed.onclick=()=>openForm(f);r2.append(ed);
+ const rm=h('button','btn del','Remove');rm.onclick=async()=>{await srcOf(f).drop(f.id);cloud&&cloud.col.doc('b_'+f.id).delete().catch(()=>{});closePage(true);await load()};r2.append(rm);
+ ac.append(go,r2);tx.append(ac);w.append(cw,tx);sheet.append(x,w);sheet.scrollTop=0;stage.classList.add('open');inkTo(0,1,RM?1:1500)}
+function closePage(kill){if(!inkOpen)return;inkOpen=false;stage.classList.remove('open');inkTo(1,0,RM?1:800,()=>{sheet.replaceChildren();if(kill===true)closeTape()})}
+
+/* reader: the screen is the page. Pages flip like paper; scroll mode is there too. */
+const rd=$('#rd'),rc=$('#rc'),rs=$('#rs'),rp=$('#rp');let R=null,tok=0,hideT;
+const pref=(()=>{try{return JSON.parse(localStorage.rd)||{}}catch(e){return{}}})(),sv=()=>{try{localStorage.rd=JSON.stringify(pref)}catch(e){}};
+const apply=()=>{rd.classList.toggle('night',!!pref.n);rd.classList.toggle('rtl',!!pref.r)};
+async function draw(n,w,hh){const pg=await R.pdf.getPage(+n),v=pg.getViewport({scale:1}),d=Math.min(devicePixelRatio||1,2.5),s=hh?Math.min(w/v.width,hh/v.height):w/v.width,vp=pg.getViewport({scale:s*d}),c=document.createElement('canvas');
+ c.width=vp.width;c.height=vp.height;c.style.width=vp.width/d+'px';c.style.height=vp.height/d+'px';await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;return c}
+const pageEl=n=>{if(!R.cache.has(n))R.cache.set(n,draw(n,rc.clientWidth,rc.clientHeight));return R.cache.get(n)};
+const keep=n=>{for(const k of [...R.cache.keys()])if(k<n-1||k>n+2)R.cache.delete(k);[n+1,n-1,n+2].forEach(k=>{if(k>=1&&k<=R.n)pageEl(k)})};
+const leaf=(c,cls)=>{const l=h('div','lf '+(cls||'')),f=h('div','fc');f.append(c,h('div','sd'));l.append(f,h('div','bc'));return l};
+async function openReader(f){if(!f.pdf)return;rd.hidden=false;rp.hidden=true;rd.classList.remove('bare');apply();rc.className='';rc.replaceChildren(h('p','msg','Opening…'));
+ try{const pdf=await pdfjsLib.getDocument({data:await f.pdf.arrayBuffer()}).promise;R={f,pdf,n:pdf.numPages,p:Math.min(getPg(f.id),pdf.numPages),cache:new Map(),tx:[]};$('#rt').textContent=f.t;rs.max=R.n;layout();
+  clearTimeout(hideT);hideT=setTimeout(()=>rd.classList.add('bare'),2800)}
+ catch(e){rc.replaceChildren(h('p','msg','This PDF could not be opened. Try exporting it again.'))}}
+async function layout(){tok++;R.io&&R.io.disconnect();R.cache.clear();rc.replaceChildren();rc.className=pref.m?'sc':'pg';apply();upd();
+ if(pref.m){const v=(await R.pdf.getPage(1)).getViewport({scale:1});
+  R.io=new IntersectionObserver(es=>es.forEach(e=>{const d=e.target;if(e.isIntersecting&&!d.dataset.d){d.dataset.d=1;draw(d.dataset.n,Math.min(rc.clientWidth,720)).then(c=>{c.style.width=c.style.height='100%';d.append(c)})}}),{root:rc,rootMargin:'700px'});
+  for(let i=1;i<=R.n;i++){const d=h('div','ph');d.style.aspectRatio=v.width+'/'+v.height;d.dataset.n=i;rc.append(d);R.io.observe(d)}
+  rc.scrollTop=(R.p-1)*(rc.firstChild.offsetHeight+10)}else show(R.p)}
+async function show(p){R.p=Math.max(1,Math.min(R.n,p));setPg(R.f.id,R.p);upd();const t=++tok,c=await pageEl(R.p);if(t===tok&&R){rc.replaceChildren(leaf(c));keep(R.p)}}
+function upd(){$('#rn').textContent=R.p+' of '+R.n;$('#pn').textContent=R.p+' of '+R.n;rs.value=R.p;$('#rbm').textContent=getBm(R.f.id).includes(R.p)?'★':'☆'}
+let ac;function snd(){if(pref.q)return;try{ac=ac||new AudioContext();const n=ac.sampleRate*.22,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5);const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();f.type='bandpass';f.frequency.value=2400;f.Q.value=.6;g.gain.value=.35;s.buffer=b;s.connect(f);f.connect(g);g.connect(ac.destination);s.start()}catch(e){}}
+async function flip(d){if(!R||pref.m||R.busy)return;const to=R.p+d;if(to<1||to>R.n){navigator.vibrate&&navigator.vibrate(6);return}snd();if(RM)return show(to);R.busy=1;
+ try{const[a,b]=await Promise.all([pageEl(R.p),pageEl(to)]),sg=pref.r?1:-1,un=leaf(d>0?b:a,'under'),tp=leaf(d>0?a:b,'top'),sh=h('div','shd'),ms=720,ez='cubic-bezier(.45,.05,.2,1)';
+  sh.style.background=`linear-gradient(to ${pref.r?'left':'right'},#000c,#0000 75%)`;tp.style.transformOrigin=pref.r?'100% 50%':'0 50%';
+  rc.replaceChildren(un,sh,tp);
+  sh.animate([{opacity:0},{opacity:.85,offset:.45},{opacity:0}],{duration:ms,easing:ez});
+  tp.querySelector('.sd').animate(d>0?[{opacity:0},{opacity:.45}]:[{opacity:.45},{opacity:0}],{duration:ms,easing:ez,fill:'forwards'});
+  navigator.vibrate&&navigator.vibrate(8);
+  await tp.animate(d>0?[{transform:'rotateY(0deg)'},{transform:`rotateY(${sg*180}deg)`}]:[{transform:`rotateY(${sg*180}deg)`},{transform:'rotateY(0deg)'}],{duration:ms,easing:ez,fill:'forwards'}).finished;
+  R.p=to;setPg(R.f.id,to);upd();rc.replaceChildren(leaf(await pageEl(to)));keep(to)}
+ finally{if(R)R.busy=0}}
+const chrome=()=>{clearTimeout(hideT);rd.classList.toggle('bare');rp.hidden=true;cp.hidden=true};
+rc.onclick=e=>{if(pref.m||!R)return;const x=e.clientX/innerWidth;if(x<.3)flip(pref.r?1:-1);else if(x>.7)flip(pref.r?-1:1);else chrome()};
+let tx0=0,ty0=0;rc.addEventListener('touchstart',e=>{tx0=e.changedTouches[0].clientX;ty0=e.changedTouches[0].clientY},{passive:true});
+rc.addEventListener('touchend',e=>{if(pref.m||!R)return;const dx=e.changedTouches[0].clientX-tx0,dy=e.changedTouches[0].clientY-ty0;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.4)flip(dx<0?(pref.r?-1:1):(pref.r?1:-1))},{passive:true});
+rc.onscroll=()=>{if(!pref.m||!R||!rc.firstChild)return;R.p=Math.min(R.n,Math.max(1,Math.round(rc.scrollTop/(rc.firstChild.offsetHeight+10))+1));setPg(R.f.id,R.p);upd()};
+rs.oninput=()=>{if(!R)return;if(pref.m)rc.scrollTop=(rs.value-1)*(rc.firstChild.offsetHeight+10);else show(+rs.value)};
+function panel(){rp.replaceChildren();[['m','Page flip','Scroll'],['r','Left to right','Right to left'],['n','Day','Night'],['q','Sound on','Sound off']].forEach(([k,a,b])=>{const g=h('div','seg');
+ [a,b].forEach((t,i)=>{const x=h('button',!!pref[k]===!!i?'on':'',t);x.onclick=()=>{pref[k]=!!i;sv();apply();if(k!=='n')layout();panel()};g.append(x)});rp.append(g)})}
+const cp=$('#cp'),li=(t,fn)=>{const b=h('button','li',t);b.onclick=fn;return b},goto=p=>{cp.hidden=true;if(pref.m)rc.scrollTop=(p-1)*(rc.firstChild.offsetHeight+10);else show(p)};
+$('#raa').onclick=()=>{cp.hidden=true;rp.hidden=!rp.hidden;if(!rp.hidden)panel()};
+$('#rbm').onclick=()=>{if(!R)return;const b=getBm(R.f.id),i=b.indexOf(R.p);i>-1?b.splice(i,1):b.push(R.p);setBm(R.f.id,b.sort((x,y)=>x-y));upd()};
+async function toc(){const out=[];try{const walk=async(a,d)=>{for(const o of a){let p=0;try{let de=o.dest;if(typeof de==='string')de=await R.pdf.getDestination(de);if(de)p=(await R.pdf.getPageIndex(de[0]))+1}catch(e){}if(p)out.push({t:o.title,p});if(o.items&&d<2)await walk(o.items,d+1)}};await walk(await R.pdf.getOutline()||[],0)}catch(e){}return out}
+async function find(q,res){q=q.trim().toLowerCase();res.replaceChildren();if(!q||!R)return;res.append(h('p','note','Searching…'));let n=0;const bk=R.f;
+ for(let i=1;i<=R.n&&n<30&&R&&R.f===bk;i++){const t=R.tx[i]||(R.tx[i]=(await(await R.pdf.getPage(i)).getTextContent()).items.map(x=>x.str).join(' ')),j=t.toLowerCase().indexOf(q);
+  if(j>-1){if(!n++)res.replaceChildren();const k=i;res.append(li('Page '+i+': …'+t.slice(Math.max(0,j-28),j+56)+'…',()=>goto(k)))}}
+ if(!n&&R&&R.f===bk)res.replaceChildren(h('p','note','No matches. Scanned pages without text can’t be searched.'))}
+$('#rtoc').onclick=async()=>{rp.hidden=true;cp.hidden=!cp.hidden;if(cp.hidden||!R)return;cp.replaceChildren();const q=h('input');q.type='search';q.placeholder='Search in this book';q.setAttribute('aria-label','Search in this book');const res=h('div');
+ q.onkeydown=e=>{if(e.key==='Enter')find(q.value,res)};cp.append(q,res);
+ const bm=getBm(R.f.id);if(bm.length){cp.append(h('h4','','Bookmarks'));bm.forEach(p=>cp.append(li('Page '+p,()=>goto(p))))}
+ const t=R.toc||(R.toc=await toc());if(t.length){cp.append(h('h4','','Contents'));t.forEach(o=>cp.append(li(o.t,()=>goto(o.p))))}if(!bm.length&&!t.length)cp.append(h('p','note','No contents or bookmarks yet. Use the star to bookmark a page.'))};
+function closeReader(){clearTimeout(hideT);R&&R.io&&R.io.disconnect();R=null;rd.hidden=true;cp.hidden=rp.hidden=true;rc.replaceChildren();upGo&&upGo();cloud&&pushState()}$('#rback').onclick=closeReader;
+
+/* add or edit a book */
+async function pdfInfo(file,wantCover){const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise,o={np:pdf.numPages};
+ if(wantCover){const pg=await pdf.getPage(1),vp=pg.getViewport({scale:1.4}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+  await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;o.cb=await new Promise(r=>c.toBlob(r,'image/jpeg',.85))}return o}
+const dlg=$('#dlg');$('#add').onclick=$('#add2').onclick=()=>openForm(null);$('#cancel').onclick=()=>dlg.close();
+$('#save').onclick=async()=>{const t=$('#ft').value.trim();if(!t){$('#ft').focus();return}
+ const o=editing,b=$('#save'),pf=$('#fp').files[0],pdf=pf||(o&&o.pdf)||null;let cb=$('#fc').files[0]||(o&&o.cb)||null,np=(o&&o.np)||0;
+ b.disabled=true;b.textContent='Shelving…';
+ if(pf||(!cb&&pdf)){try{const i=await pdfInfo(pdf,!cb);np=i.np;cb=cb||i.cb||null}catch(e){}}
+ const rec={id:o?o.id:'u'+Date.now(),t,a:$('#fa').value.trim(),y:$('#fy').value.trim()||'—',s:$('#fs').value.trim(),np,pdf,cb},sc=o?srcOf(o):SOURCES[0];await sc.save({...rec,src:sc.id});cloud&&pushBook(rec,!!pf,!o||!!$('#fc').files[0]);
+ b.disabled=false;b.textContent='Shelve it';dlg.close();if(o)closePage(true);await load();scrollTo(0,0)};
+addEventListener('keydown',e=>{const bk=e.target.closest&&e.target.closest('.bk');if(bk&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openTape(bk)}if(e.key==='Escape'&&!dlg.open&&!sd.open){if(!rd.hidden)closeReader();else inkOpen?closePage():closeTape()}
+ if(R&&!rd.hidden&&!pref.m){if(e.key==='ArrowRight')flip(pref.r?-1:1);if(e.key==='ArrowLeft')flip(pref.r?1:-1);if(e.key===' '||e.key==='PageDown')flip(1)}});
+/* library filters */
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+[['','All'],['now','Reading'],['done','Finished'],['new','Unread']].forEach(([v,t])=>{const b=h('button',v===''?'on':'',t);b.onclick=()=>{filt=v;[...$('#fl').children].forEach(x=>x.classList.toggle('on',x===b));rebuild()};$('#fl').append(b)});
+$('#q').oninput=$('#so').onchange=rebuild;
+$('#cam').onclick=()=>$('#fcam').click();$('#fcam').onchange=e=>{const f=e.target.files[0];if(!f)return;const dt=new DataTransfer();dt.items.add(f);$('#fc').files=dt.files};
+
+/* backup, restore and cloud sync */
+const b64=b=>new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(b)});
+const unb=u=>{const[m,d]=u.split(','),s=atob(d),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return new Blob([a],{type:m.slice(5,m.indexOf(';'))})};
+const say=t=>{$('#cs').textContent=t};
+$('#bk1').onclick=async()=>{try{const dl=window.claude?await claude.use('downloads'):{save:async({filename:n,data:b})=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)}};if(!dl)return say('Saving files isn’t available in this view.');say('Preparing backup…');
+ const out=[];for(const f of films){const r={id:f.id,t:f.t,a:f.a,y:f.y,s:f.s,np:f.np,pg:getPg(f.id),bm:getBm(f.id)};if(f.pdf)r.pdf=await b64(f.pdf);if(f.cb)r.cb=await b64(f.cb);out.push(r)}
+ await dl.save({filename:'pergamum-backup.json',data:new Blob([JSON.stringify(out)],{type:'application/json'})});say('Backup ready.')}catch(e){say('Backup was cancelled or failed.')}};
+$('#bk2').onclick=()=>$('#bkf').click();
+$('#bkf').onchange=async e=>{const fl=e.target.files[0];if(!fl)return;try{const out=JSON.parse(await fl.text());let n=0;for(const r of out){if(!r.t)continue;const id=r.id||'u'+Date.now()+n;
+ await dbop('put',{id,t:r.t,a:r.a||'',y:r.y||'—',s:r.s||'',np:r.np||0,pdf:r.pdf?unb(r.pdf):null,cb:r.cb?unb(r.cb):null,src:'local'});if(r.pg>1)setPg(id,r.pg);if(r.bm&&r.bm.length)setBm(id,r.bm);n++}await load();say('Restored '+n+' books.')}catch(err){say('That file isn’t a valid backup.')}e.target.value=''};
+let cloud=null;
+async function pushBook(f,upPdf,upCb){if(!cloud)return;const d=cloud.col.doc('b_'+f.id);let r={};try{const s=await d.get();r=s.exists?s.data():{}}catch(e){}
+ r={...r,t:f.t,a:f.a||'',y:String(f.y),s:f.s||'',np:f.np||0};
+ try{if(cloud.as){if(f.pdf&&(upPdf||!r.pdf)&&f.pdf.size<20971520)r.pdf=(await cloud.as.upload(f.pdf,{type:'application/pdf'})).id;if(f.cb&&(upCb||!r.cb))r.cb=(await cloud.as.upload(f.cb)).id}}catch(e){}
+ try{await d.set(r)}catch(e){}}
+async function pushState(){if(!cloud)return;try{const m={};films.forEach(f=>{m[f.id]={p:getPg(f.id),l:getLr(f.id),b:getBm(f.id)}});await cloud.col.doc('state').set({m})}catch(e){}}
+async function syncNow(){if(!cloud)return say('Sign in to claude.ai to sync across devices.');say('Syncing…');
+ try{const snap=await cloud.col.get(),rem=new Map(snap.docs.map(d=>[d.id,d.data()]));let up=0,dn=0;
+ for(const f of films)if(!rem.has('b_'+f.id)){await pushBook(f);up++}
+ for(const[k,r]of rem){if(!k.startsWith('b_')||films.some(f=>'b_'+f.id===k))continue;const g=async i=>{try{return i?await(await fetch('/_blob/'+i)).blob():null}catch(e){return null}};
+  await dbop('put',{id:k.slice(2),t:r.t,a:r.a,y:r.y,s:r.s,np:r.np,pdf:await g(r.pdf),cb:await g(r.cb),src:'local'});dn++}
+ const st=rem.get('state');if(st&&st.m)for(const[id,v]of Object.entries(st.m))if(v.l>getLr(id)){setPg(id,v.p);localStorage['lr:'+id]=v.l;setBm(id,v.b||[])}
+ if(dn)await load();else rebuild();await pushState();say(`Synced: ${up} sent, ${dn} received.`)}catch(e){say('Sync failed. Try again.')}}
+$('#sync').onclick=syncNow;
+(async()=>{try{if(!window.claude)return say('Cloud sync isn’t part of the installed app. Use Back up and Restore to move books between devices.');const[db,us,as]=await Promise.all([claude.use('db'),claude.use('user'),claude.use('assets')]),uid=us&&await us.id();
+ if(db&&uid){cloud={as,col:db.collection('data/users/'+uid)};say('Cloud sync is ready.'+(as?'':' This account can sync details but not PDF files.'));syncNow()}else say('Sign in to claude.ai to sync across devices.')}catch(e){say('Cloud sync isn’t available here.')}})();
+/* Internet Archive source */
+const IA='https://archive.org',bd=$('#bdlg'),one=v=>String([].concat(v||'')[0]||'');
+function openBrowse(){dlg.close();bd.showModal();$('#bq').focus()}
+$('#ia1').onclick=$('#ia2').onclick=openBrowse;$('#bclose').onclick=()=>bd.close();
+async function iaFind(){const q=$('#bq').value.trim(),res=$('#bres');if(!q)return;res.replaceChildren(h('p','note','Searching…'));
+ try{const u=`${IA}/advancedsearch.php?q=${encodeURIComponent('('+q+') AND mediatype:texts AND -access-restricted-item:true')}&fl[]=identifier&fl[]=title&fl[]=creator&fl[]=year&rows=24&sort[]=downloads%20desc&output=json`;
+  const docs=(await(await fetch(u)).json()).response.docs;res.replaceChildren();
+  if(!docs.length)return res.append(h('p','note','Nothing found. Try other words.'));
+  docs.forEach(d=>{const row=h('div','hit'),im=new Image(),tx=h('div'),b=h('button','btn','Add');im.src=`${IA}/services/img/${d.identifier}`;im.alt='';im.loading='lazy';
+   tx.append(h('b','',one(d.title)),h('small','',[one(d.creator),d.year].filter(Boolean).join(' · ')));
+   if(films.some(f=>f.id==='ia_'+d.identifier)){b.textContent='In library';b.disabled=true}else b.onclick=()=>iaAdd(d,b);
+   row.append(im,tx,b);res.append(row)})}
+ catch(e){res.replaceChildren(h('p','note','Couldn’t reach the Internet Archive. Check your connection and try again.'))}}
+$('#bgo').onclick=iaFind;$('#bq').onkeydown=e=>{if(e.key==='Enter')iaFind()};
+async function iaAdd(d,b){b.disabled=true;const id=d.identifier;
+ try{b.textContent='Finding…';const m=await(await fetch(`${IA}/metadata/${id}`)).json(),ps=(m.files||[]).filter(x=>/\.pdf$/i.test(x.name)),f=ps.find(x=>x.format==='Text PDF')||ps.find(x=>x.format==='Image Container PDF')||ps[0];
+  if(!f){b.textContent='No PDF';return}
+  const res=await fetch(`${IA}/download/${id}/${encodeURIComponent(f.name)}`);if(!res.ok)throw 0;const tot=+f.size||+res.headers.get('content-length')||0,rd=res.body.getReader(),ch=[];let got=0;
+  for(;;){const{done,value}=await rd.read();if(done)break;ch.push(value);got+=value.length;b.textContent=tot?Math.round(got/tot*100)+'%':Math.round(got/1048576)+' MB'}
+  const pdf=new Blob(ch,{type:'application/pdf'});let cb=null;try{const c=await(await fetch(`${IA}/services/img/${id}`)).blob();if(/^image\//.test(c.type))cb=c}catch(e){}
+  b.textContent='Shelving…';const info=await pdfInfo(pdf,!cb),ds=one(m.metadata&&m.metadata.description).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,600);
+  await SOURCES[0].save({id:'ia_'+id,t:one(d.title),a:one(d.creator),y:String(d.year||'—'),s:ds,np:info.np,pdf,cb:cb||info.cb||null,src:'local'});await load();b.textContent='Added'}
+ catch(e){b.disabled=false;b.textContent='Retry'}}
+navigator.storage&&navigator.storage.persist&&navigator.storage.persist();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+rebuild();load();
+</script>
+<script src="pdf.min.js" onload="if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='pdf.worker.min.js'"></script>
+</body>
+</html>
